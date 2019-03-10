@@ -20,7 +20,7 @@ func New(config *auth.Config) *auth.Auth {
 	if config == nil {
 		config = &auth.Config{}
 	}
-	config.ViewPaths = append(config.ViewPaths, "github.com/qor/auth_themes/clean/views")
+	config.ViewPaths = append(config.ViewPaths, filepath.Join(utils.AppRoot, "app/views"))
 
 	if config.DB == nil {
 		fmt.Print("Please configure *gorm.DB for Auth theme clean")
@@ -29,15 +29,20 @@ func New(config *auth.Config) *auth.Auth {
 	if config.Render == nil {
 		yamlBackend := yaml.New()
 		I18n := i18n.New(yamlBackend)
-		for _, gopath := range append([]string{filepath.Join(utils.AppRoot, "vendor")}, utils.GOPATH()...) {
-			filePath := filepath.Join(gopath, "src", "github.com/qor/auth_themes/clean/locales/en-US.yml")
-			if content, err := ioutil.ReadFile(filePath); err == nil {
-				translations, _ := yamlBackend.LoadYAMLContent(content)
-				for _, translation := range translations {
-					I18n.AddTranslation(translation)
-				}
-				break
+
+		filePath := filepath.Join(utils.AppRoot, "app/locales/en-US.yml")
+
+		fmt.Println(filePath)
+		if content, err := ioutil.ReadFile(filePath); err == nil {
+			translations, err := yamlBackend.LoadYAMLContent(content)
+			if err != nil {
+				fmt.Println(err.Error())
 			}
+			for _, translation := range translations {
+				I18n.AddTranslation(translation)
+			}
+		} else if err != nil {
+			fmt.Println(err.Error())
 		}
 
 		config.Render = render.New(&render.Config{
