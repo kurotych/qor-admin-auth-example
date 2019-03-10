@@ -32,7 +32,6 @@ func New(config *auth.Config) *auth.Auth {
 
 		filePath := filepath.Join(utils.AppRoot, "app/locales/en-US.yml")
 
-		fmt.Println(filePath)
 		if content, err := ioutil.ReadFile(filePath); err == nil {
 			translations, err := yamlBackend.LoadYAMLContent(content)
 			if err != nil {

@@ -15,7 +15,7 @@ import (
 	"github.com/qor/roles"
 	"github.com/qor/session/manager"
 	"net/http"
-	"servers-manager/auththeme"
+	"qor-admin-auth-example/auththeme"
 	"strings"
 	"time"
 )
